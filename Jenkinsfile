@@ -3,38 +3,21 @@ pipeline {
 
     stages {
         
-        // stage('Build') {
-        //     agent{
-        //         docker{
-        //             image 'node:18-alpine'
-        //             reuseNode true
-        //         }
-        //     }
-        //     steps {
-        //         sh '''
-        //             ls -la
-        //             node --version
-        //             npm ---version
-        //             npm ci
-        //             npm run build 
-        //         ''' 
-        //     }
-        // }
 
         
         
         stage('Run Tests'){
-                parallel {
-                    stage('Unit Test'){
-                agent{
+            parallel {
+                 stage('Unit Test'){
+                     agent{
                     docker{
                         image 'node:18-alpine'
                         reuseNode true
                     }
                 }
                 steps{
-                sh ''' 
-                test -f build/index.html
+                 sh ''' 
+                     test -f build/index.html
                     npm test
                     '''
                 }
@@ -47,14 +30,14 @@ pipeline {
         
 
                 stage('e2e test'){
-                agent{
-                    docker{
+                    agent{
+                     docker{
                         image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
                         reuseNode true
                     }
                 }
                 steps{
-                sh ''' 
+                    sh ''' 
                     npm install serve
                     node_modules/.bin/serve -s build &
                     sleep 10
@@ -70,8 +53,5 @@ pipeline {
             }
         }
    
-         
-    }
-
-   
+      }
 }
