@@ -78,19 +78,56 @@ pipeline {
                         echo "Deployng to staging. Site ID: $NETLIFY_SITE_ID"
                         node_modules/.bin/netlify status
                         node_modules/.bin/netlify deploy --dir=build --json > deploy-output.json
-                        node_modules/.bin/node-jq -r '.deploy_url' deploy-output.json
+                       
                         '''
+                    script {
+                        env.STAGING_URL = sh(script: "node_modules/.bin/node-jq -r '.deploy_url' deploy-output.json", returnStdout: true)
+        }
                     }
-                }
 
-                stage('Approval'){
-                    steps{
-                        timeout(time: 15, unit: 'MINUTES'){
-                            input message: 'Do you wish to deploy to production?', ok: 'Yes, I am sure' 
-                        }
-                        
-                    }
                 }
+                        stage('Staging e2e') {
+            agent {
+                docker {
+                    image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
+                    reuseNode true
+                }
+            }
+
+        environment{
+            CI_ENVIRONMENT_URL= "${env.STAGING_URL}"
+        }
+
+            steps {
+                sh ''' 
+                npx playwright test --reporter=html
+                '''
+            }
+            post {
+                always {
+                    publishHTML([
+                        allowMissing: false,
+                        alwaysLinkToLastBuild: false,
+                        keepAll: false,
+                        reportDir: 'playwright-report',
+                        reportFiles: 'index.html',
+                        reportName: 'Staging E2E',
+                        reportTitles: '',
+                        useWrapperFileDirectly: true
+                    ])
+                }
+            }
+        }
+
+
+                // stage('Approval'){
+                //     steps{
+                //         timeout(time: 15, unit: 'MINUTES'){
+                //             input message: 'Do you wish to deploy to production?', ok: 'Yes, I am sure' 
+                //         }
+                        
+                //     }
+                // }
                 stage ('Deploy Prod'){
                     agent{
                         docker {
@@ -118,7 +155,7 @@ pipeline {
             }
 
         environment{
-        CI_ENVIRONMENT_URL= 'https://66d46f75fa719039cf628266--storied-blancmange-03b508.netlify.app'
+            CI_ENVIRONMENT_URL= 'https://66d46f75fa719039cf628266--storied-blancmange-03b508.netlify.app'
         }
 
             steps {
@@ -134,7 +171,7 @@ pipeline {
                         keepAll: false,
                         reportDir: 'playwright-report',
                         reportFiles: 'index.html',
-                        reportName: 'Playwright E2E',
+                        reportName: 'Production E2E',
                         reportTitles: '',
                         useWrapperFileDirectly: true
                     ])
