@@ -9,9 +9,21 @@ pipeline {
     }
 
     stages {
-        stage('Docker'){
-            steps{
-                sh 'docker build -t my-playwright .'
+        // stage('Docker'){
+        //     steps{
+        //         sh 'docker build -t my-playwright .'
+        //     }
+        // }
+        stage ('AWS'){
+            agent {
+                docker{
+                    image 'amazon/aws-cli:latest'
+                }
+            }
+            steps {
+                '''
+                aws --version
+                '''
             }
         }
 
