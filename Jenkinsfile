@@ -14,6 +14,19 @@ pipeline {
         //     }
         // }
 
+         stage('Biuld Docker Image'){
+                        agent {
+                docker{
+                    image 'amazon/aws-cli'
+                    reuseNode true
+                    args "-u root --entrypoint=''"
+                }
+            }
+            steps{
+                sh 'docker build -t myjenkinsapp'
+            }
+         }
+
  stage ('Deploy to AWS'){
             agent {
                 docker{
@@ -56,11 +69,7 @@ pipeline {
             }
          }
 
-         stage('Biuld Docker Image'){
-            steps{
-                sh 'docker build -t myjenkinsapp'
-            }
-         }
+
        
         // stage('Tests') {
         //     parallel {
