@@ -15,6 +15,12 @@ pipeline {
         //     }
         // }
         stage('Build') {
+
+            stage('Buid docker images'){
+                steps{
+                    sh 'docker build -f ci/Dockerfile-aws-cli -t my-aws-cli'
+                }
+            }
             agent {
                 docker {
                     image 'node:18-alpine'
