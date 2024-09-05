@@ -16,7 +16,7 @@ pipeline {
         // }
          stage('Buid docker images'){
                 steps{
-                    sh 'docker build -f ci/Dockerfile-aws-cli -t my-aws-cli'
+                    sh 'docker build -f ci/Dockerfile-aws-cli -t my-aws-cli .'
                 }
             }
         stage('Build') {
