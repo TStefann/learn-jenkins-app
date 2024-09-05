@@ -1,11 +1,7 @@
 pipeline {
     agent any
 
-    environment {
-       
-       
-    }
-
+   
     stages {
         // stage('Docker'){
         //     steps{
