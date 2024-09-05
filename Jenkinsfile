@@ -8,14 +8,33 @@ pipeline {
         }
    
     stages {
+
         // stage('Docker'){
         //     steps{
         //         sh 'docker build -t my-playwright .'
         //     }
         // }
+        stage('Build') {
+            agent {
+                docker {
+                    image 'node:18-alpine'
+                    reuseNode true
+                }
+            }
+            steps {
+                sh '''
+                    ls -la
+                    node --version
+                    npm --version
+                    npm ci
+                    npm run build
+                    ls -la
+                '''
+            }
+         }
 
          stage('Biuld Docker Image'){
-                        agent {
+             agent {
                 docker{
                     image 'amazon/aws-cli'
                     reuseNode true
@@ -23,7 +42,11 @@ pipeline {
                 }
             }
             steps{
-                sh 'docker build -t myjenkinsapp'
+                sh '''
+                    amazon-linux-extras install docker
+                    docker build -t myjenkinsapp
+                '''
+             
             }
          }
 
@@ -50,24 +73,7 @@ pipeline {
             }
         }
 
-        stage('Build') {
-            agent {
-                docker {
-                    image 'node:18-alpine'
-                    reuseNode true
-                }
-            }
-            steps {
-                sh '''
-                    ls -la
-                    node --version
-                    npm --version
-                    npm ci
-                    npm run build
-                    ls -la
-                '''
-            }
-         }
+
 
 
        
