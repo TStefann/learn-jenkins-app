@@ -3,7 +3,7 @@ pipeline {
         environment{
             AWS_DEFAULT_REGION = 'eu-north-1'
             AWS_ECS_CLUSTER = 'LearnJenkinsApp-Cluster-Prod_1'
-             AWS_ECS_SERVICE_PROD = 'LearnJenkinsApp-Cluster-Prod_1'
+             AWS_ECS_SERVICE_PROD = 'LeaernJenkinsApp-Service-Prod'
              AWS_ECS_TD_PROD = 'LearnJenkinsApp-TaskDefinition-Prod'
         }
    
