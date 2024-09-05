@@ -14,13 +14,13 @@ pipeline {
         //         sh 'docker build -t my-playwright .'
         //     }
         // }
-        stage('Build') {
-
-            stage('Buid docker images'){
+         stage('Buid docker images'){
                 steps{
                     sh 'docker build -f ci/Dockerfile-aws-cli -t my-aws-cli'
                 }
             }
+        stage('Build') {
+           
             agent {
                 docker {
                     image 'node:18-alpine'
