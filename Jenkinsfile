@@ -1,6 +1,8 @@
 pipeline {
     agent any
-
+        environment{
+            AWS_DEFAULT_REGION: = 'eu-north-1'
+        }
    
     stages {
         // stage('Docker'){
