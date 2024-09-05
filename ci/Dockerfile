@@ -1,2 +1,3 @@
-FROM mcr.microsoft.com/playwright:v1.39.0-jammy
-RUN npm install -g netlify-cli node-jq serve
+FROM amazon/aws-cli
+RUN amazon-linux-extras install docker
+RUN yum install jq -y
