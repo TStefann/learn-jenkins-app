@@ -55,6 +55,12 @@ pipeline {
                 '''
             }
          }
+
+         stage('Biuld Docker Image'){
+            steps{
+                sh 'docker build -t myjenkinsapp'
+            }
+         }
        
         // stage('Tests') {
         //     parallel {
